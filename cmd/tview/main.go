@@ -7,26 +7,27 @@ import (
 func main() {
 	app := tview.NewApplication()
 
-	a := tview.NewTextView()
-	a.SetText("textarea(a)")
+	// リストを作成
+	buttons := tview.NewList()
+	buttons.AddItem("Yes", "", rune(0), nil)
+	buttons.AddItem("No", "", rune(0), nil)
 
-	b := tview.NewTextView()
-	b.SetText("textarea(b)")
-	b.SetTitle("title(b)").
-		SetBorder(true)
+	// テキストを表示するためのViewを作成
+	selectionText := tview.NewBox().SetBorder(true).SetTitle("Selection")
 
-	c := tview.NewTextView()
-	c.SetText("textarea(c)")
-	c.SetTitle("title(c)").
-		SetTitleAlign(tview.AlignRight).
-		SetBorder(true)
+	// ボタンを選択したときの動作を設定
+	buttons.SetSelectedFunc(func(index int, label string, primaryText string, secondaryText rune) {
+		selectionText.SetTitle(label)
+	})
 
-	flex := tview.NewFlex().
-		AddItem(a, 0, 1, false).
-		AddItem(b, 0, 1, false).
-		AddItem(c, 0, 1, false)
+	// レイアウトを作成
+	layout := tview.NewFlex().
+		SetDirection(tview.FlexRow).
+		AddItem(tview.NewBox(), 0, 1, false).
+		AddItem(buttons, 0, 3, false).
+		AddItem(selectionText, 0, 1, false)
 
-	if err := app.SetRoot(flex, true).Run(); err != nil {
+	if err := app.SetRoot(layout, true).Run(); err != nil {
 		panic(err)
 	}
 }
