@@ -6,10 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"regexp"
-	"strconv"
 
-	"github.com/nippati/moff/pkg/playbook"
+	"github.com/nippati/moff/pkg/ansible"
 	"github.com/nippati/moff/pkg/scan"
 	"github.com/nippati/moff/pkg/ui"
 )
@@ -28,50 +26,40 @@ func main() {
 		log.Fatalf("error decoding JSON: %v", err)
 	}
 
-	// Extract vulnerability IDs
-	re := regexp.MustCompile(`CVE-(\d{4})-(\d+)`)
-	var vulns []int
+	// Convert []string to []ui.Vulnerability
+	var vulns []ui.Vulnerability
 	for _, v := range results.Vulnerabilities {
-		matches := re.FindStringSubmatch(v)
-		if len(matches) == 3 {
-			id, err := strconv.Atoi(matches[2])
-			if err != nil {
-				log.Fatalf("error converting vulnerability ID to int: %v", err)
-			}
-			vulns = append(vulns, id)
-		}
-	}
-
-	// Convert []int to []ui.Vulnerability
-	var uiVulns []ui.Vulnerability
-	for _, v := range vulns {
-		uiVulns = append(uiVulns, ui.Vulnerability{ID: v})
+		vulns = append(vulns, ui.Vulnerability{ID: v})
 	}
 
 	// Create a HTTP server and listen for requests
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Display the list of vulnerabilities and allow the user to select which ones to deploy
-		selected, err := ui.SelectVulnerabilities(uiVulns)
+		selected, err := ui.SelectVulnerabilities(vulns)
 		if err != nil {
 			fmt.Println("Error selecting vulnerabilities:", err)
 			return
 		}
-		// Convert []int to []string
-		var selectedStr []string
-		for _, v := range selected {
-			selectedStr = append(selectedStr, strconv.Itoa(v))
+
+		// Generate an Ansible playbook based on the selected vulnerabilities
+		playbook := ansible.GeneratePlaybook(selected)
+
+		// Write the playbook to a file
+		file, err := os.Create("playbook.yml")
+		if err != nil {
+			fmt.Println("Error creating playbook file:", err)
+			return
+		}
+		defer file.Close()
+
+		_, err = file.WriteString(playbook)
+		if err != nil {
+			fmt.Println("Error writing playbook file:", err)
+			return
 		}
 
-		// Generate an Ansible playbook based on the selected vulnerabilities
-		playbook := playbook.Generate(selectedStr)
-
-		// Generate an Ansible playbook based on the selected vulnerabilities
-
-		// Print the playbook to the console
-		fmt.Println(playbook)
-
-		// Return the playbook to the user
-		w.Write([]byte(playbook))
+		// Return a success message to the user
+		w.Write([]byte("Ansible playbook successfully generated!"))
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
