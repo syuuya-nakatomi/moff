@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 
-	"github.com/nippati/moff/pkg/ansible"
 	"github.com/nippati/moff/pkg/scan"
 	"github.com/nippati/moff/pkg/ui"
 )
@@ -33,9 +33,9 @@ func main() {
 
 	// Convert []scan.Vulnerability to []ui.Vulnerability
 	var vulns []ui.Vulnerability
-	for _, r := range results {
+	for _, r := range results.Vulnerabilities {
 		v := ui.Vulnerability{
-			ID: r.VulnerabilityID,
+			ID: r.cve, // Use VulnID instead of ID
 		}
 		vulns = append(vulns, v)
 	}
@@ -85,7 +85,7 @@ func main() {
 				return
 			}
 
-			playbook := ansible.GeneratePlaybook(selected)
+			playbook := GeneratePlaybook(selected)
 
 			// Write the playbook to a file
 			file, err := os.Create("playbook.yml")
@@ -103,11 +103,9 @@ func main() {
 
 			// Return a success message to the user
 			w.Write([]byte("Ansible playbook successfully generated!"))
-			// Return a success message to the user
-			w.Write([]byte("Ansible playbook successfully generated!"))
 
 			// Execute the Ansible playbook
-			err = ansible.RunPlaybook("playbook.yml")
+			err = RunPlaybook("playbook.yml")
 			if err != nil {
 				fmt.Println("Error executing playbook:", err)
 				return
@@ -136,6 +134,13 @@ func GeneratePlaybook(vulns []ui.Vulnerability) string {
 
 // RunPlaybook runs the specified Ansible playbook
 func RunPlaybook(playbook string) error {
-	// TODO: implement playbook execution logic
+	// Execute the Ansible playbook using the "ansible-playbook" command
+	cmd := exec.Command("ansible-playbook", playbook)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("error executing Ansible playbook: %v", err)
+	}
 	return nil
 }
