@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/jroimartin/gocui v0.5.0
-	github.com/rivo/tview v0.0.0-20230208211350-7dfff1ce7854
+	github.com/rivo/tview v0.0.0-20230307144320-cc10b288e304
 	github.com/vulsio/go-cve-dictionary v0.9.0
 )
 
@@ -20,7 +20,8 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell v1.4.0 // indirect
-	github.com/gdamore/tcell/v2 v2.5.4 // indirect
+	github.com/gdamore/tcell/v2 v2.6.0 // indirect
+	github.com/gizak/termui/v3 v3.1.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
@@ -53,6 +54,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.7 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/cobra v1.6.1 // indirect
