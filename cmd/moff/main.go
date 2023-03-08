@@ -1,74 +1,47 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
-	"os"
-	"os/exec"
 
-	"github.com/nippati/moff/pkg/scan"
-	"github.com/nippati/moff/pkg/ui"
+	"github.com/nippati/moff/pkg/moff"
 )
 
-type Vulnerability struct {
-	ID string `json:"id"`
+// hoge
+func main() {
+	http.HandleFunc("/", handle)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func main() {
-	// Read the JSON file of vuls scan results
-	file, err := os.Open("vuls-results.json")
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
-	defer file.Close()
+func handle(w http.ResponseWriter, r *http.Request) {
+	// Parse the query parameters
+	q := r.URL.Query()
+	url := q.Get("url")
 
-	var results scan.Results
-	err = json.NewDecoder(file).Decode(&results)
-	if err != nil {
-		log.Fatalf("error decoding JSON: %v", err)
+	// Check if the "url" parameter is present
+	if url == "" {
+		http.Error(w, "missing 'url' parameter", http.StatusBadRequest)
+		return
 	}
 
-	// Convert []scan.Vulnerability to []ui.Vulnerability
-	var vulns []ui.Vulnerability
-	for _, r := range results.Vulnerabilities {
-		var vulnID string
-		if r.ID != "" {
-			vulnID = r.ID
-		} else if r.VulnID != "" {
-			vulnID = r.VulnID
-		} else {
-			log.Printf("unable to identify vulnerability ID for %+v", r)
-			continue
-		}
-		v := ui.Vulnerability{
-			ID: vulnID,
-		}
-		vulns = append(vulns, v)
-
-	// Render the HTML template with the vulns data
-	tmpl := template.Must(template.ParseFiles("vulns.html"))
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		err := tmpl.Execute(w, vulns)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-	})
-
-	// Open the browser to the app URL
-	url := "http://localhost:8080"
-	cmd := exec.Command("open", url)
-	err = cmd.Run()
+	// Fetch the URL contents
+	content, err := moff.Fetch(url)
 	if err != nil {
-		log.Fatalf("error opening URL in browser: %v", err)
+		http.Error(w, fmt.Sprintf("error fetching URL: %s", err), http.StatusInternalServerError)
+		return
 	}
 
-	// Start the app server
-	fmt.Printf("Starting server at %s\n", url)
-	err = http.ListenAndServe(":8080", nil)
+	// Convert the content to Markdown
+	md, err := moff.ToMarkdown(content)
 	if err != nil {
-		log.Fatalf("error starting server: %v", err)
+		http.Error(w, fmt.Sprintf("error converting content to Markdown: %s", err), http.StatusInternalServerError)
+		return
+	}
+
+	// Write the Markdown response
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	if _, err := w.Write([]byte(md)); err != nil {
+		log.Printf("error writing response: %s", err)
 	}
 }
