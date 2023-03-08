@@ -5,27 +5,27 @@
           {
               "name": "openssl",
               "version": "1.1.1k-1+deb10u1",
-              "installed_version": "1.1.1k-1+deb10u1"
+              "installed_version": "1.1.1j-1+deb10u1"
           },
           {
               "name": "nginx",
               "version": "1.14.2-2+deb10u7",
-              "installed_version": "1.14.2-2+deb10u7"
+              "installed_version": "1.14.2-2+deb10u6"
           },
           {
               "name": "php",
               "version": "2:7.3+69",
-              "installed_version": "2:7.3+69"
+              "installed_version": "2:7.3+68"
           },
           {
               "name": "vim",
               "version": "2:8.1.0875-5",
-              "installed_version": "2:8.1.0875-5"
+              "installed_version": "2:8.1.0874-5"
           },
           {
               "name": "git",
               "version": "1:2.20.1-2+deb10u3",
-              "installed_version": "1:2.20.1-2+deb10u3"
+              "installed_version": "1:2.20.1-2+deb10u2"
           }
       ]
   }
