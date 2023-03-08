@@ -11,7 +11,6 @@ import (
 	"github.com/nippati/moff/pkg/ui"
 )
 
-// hoge
 func main() {
 	// Read the JSON file of vuls scan results
 	file, err := os.Open("vuls-results.json")
