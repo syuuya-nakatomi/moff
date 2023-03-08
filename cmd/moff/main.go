@@ -27,6 +27,7 @@ type PlaybookData struct {
 	Pkgs []PackageInfo
 }
 
+// hoge
 const playbookTemplate = `
 ---
 - hosts: all
