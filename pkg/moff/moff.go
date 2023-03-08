@@ -1,4 +1,3 @@
-package moff
 
 import (
 	"errors"
