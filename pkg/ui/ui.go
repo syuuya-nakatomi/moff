@@ -7,8 +7,7 @@ import (
 
 func SelectVulnerabilities(vulnerabilities []string) ([]string, error) {
 	// Initialize the TUI
-	err := termui.Init()
-	if err != nil {
+	if err := termui.Init(); err != nil {
 		return nil, err
 	}
 	defer termui.Close()
@@ -29,18 +28,35 @@ func SelectVulnerabilities(vulnerabilities []string) ([]string, error) {
 
 	// Wait for user input
 	var selected []string
+	events := termui.PollEvents()
 	for {
-		e := termui.PollEvent()
-		if e.Type == termui.KeyboardEvent {
+		select {
+		case e := <-events:
 			switch e.ID {
 			case "q", "<C-c>":
 				// Quit if user presses 'q' or Ctrl+C
 				return nil, nil
 			case "<Enter>":
 				// Add selected vulnerability to list
-				_, i := list.Selected()
+				i := list.SelectedRow
 				if i >= 0 {
 					selected = append(selected, vulnerabilities[i])
+				}
+			case "<Up>", "<Down>":
+				// Move selection up or down
+				dir := 1
+				if e.ID == "<Up>" {
+					dir = -1
+				}
+				i := list.SelectedRow
+				if i >= 0 {
+					i += dir
+					if i >= len(vulnerabilities) {
+						i = len(vulnerabilities) - 1
+					} else if i < 0 {
+						i = 0
+					}
+					list.SelectedRow = i
 				}
 			}
 		}
