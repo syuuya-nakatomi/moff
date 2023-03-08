@@ -1,0 +1,37 @@
+{
+    "Hosts": [
+      {
+        "Hostname": "example.com",
+        "IP": "192.168.0.1",
+        "Vulnerabilities": [
+          {
+            "VulnerabilityID": "CVE-2021-1234",
+            "Title": "Example Vulnerability",
+            "Severity": "High"
+          },
+          {
+            "VulnerabilityID": "CVE-2021-5678",
+            "Title": "Another Vulnerability",
+            "Severity": "Critical"
+          }
+        ]
+      },
+      {
+        "Hostname": "example.net",
+        "IP": "192.168.0.2",
+        "Vulnerabilities": [
+          {
+            "VulnerabilityID": "CVE-2021-4321",
+            "Title": "Third Vulnerability",
+            "Severity": "Medium"
+          },
+          {
+            "VulnerabilityID": "CVE-2021-8765",
+            "Title": "Fourth Vulnerability",
+            "Severity": "High"
+          }
+        ]
+      }
+    ]
+  }
+  
