@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"io/ioutil"
-	"markdown"
 	"net/http"
 	"os/exec"
 	"strings"
