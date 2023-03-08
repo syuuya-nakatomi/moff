@@ -34,20 +34,19 @@ func main() {
 	// Convert []scan.Vulnerability to []ui.Vulnerability
 	var vulns []ui.Vulnerability
 	for _, r := range results.Vulnerabilities {
-		var id string
+		var vulnID string
 		if r.ID != "" {
-			id = r.ID
+			vulnID = r.ID
 		} else if r.VulnID != "" {
-			id = r.VulnID
+			vulnID = r.VulnID
 		} else {
+			log.Printf("unable to identify vulnerability ID for %+v", r)
 			continue
 		}
-
 		v := ui.Vulnerability{
-			ID: id,
+			ID: vulnID,
 		}
 		vulns = append(vulns, v)
-	}
 
 	// Render the HTML template with the vulns data
 	tmpl := template.Must(template.ParseFiles("vulns.html"))
