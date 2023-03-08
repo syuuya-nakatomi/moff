@@ -2,9 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
+	"net/http"
 	"os"
+	"os/exec"
 
 	"github.com/nippati/moff/pkg/scan"
 	"github.com/nippati/moff/pkg/ui"
@@ -31,24 +34,42 @@ func main() {
 	// Convert []scan.Vulnerability to []ui.Vulnerability
 	var vulns []ui.Vulnerability
 	for _, r := range results.Vulnerabilities {
+		var id string
+		if r.ID != "" {
+			id = r.ID
+		} else if r.VulnID != "" {
+			id = r.VulnID
+		} else {
+			continue
+		}
+
 		v := ui.Vulnerability{
-			ID: r.VulnID,
+			ID: id,
 		}
 		vulns = append(vulns, v)
 	}
 
-	// Render the template with the vulnerability data
-	tmpl, err := template.ParseFiles("template.html")
+	// Render the HTML template with the vulns data
+	tmpl := template.Must(template.ParseFiles("vulns.html"))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		err := tmpl.Execute(w, vulns)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	})
+
+	// Open the browser to the app URL
+	url := "http://localhost:8080"
+	cmd := exec.Command("open", url)
+	err = cmd.Run()
 	if err != nil {
-		log.Fatalf("error parsing template: %v", err)
+		log.Fatalf("error opening URL in browser: %v", err)
 	}
-	data := struct {
-		Vulns []ui.Vulnerability
-	}{
-		Vulns: vulns,
-	}
-	err = tmpl.Execute(os.Stdout, data)
+
+	// Start the app server
+	fmt.Printf("Starting server at %s\n", url)
+	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
-		log.Fatalf("error rendering template: %v", err)
+		log.Fatalf("error starting server: %v", err)
 	}
 }
