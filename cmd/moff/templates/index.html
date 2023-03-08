@@ -1,52 +1,19 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>Confirm vulnerabilities to deploy</title>
-		<style>
-			body {
-				font-family: Arial, sans-serif;
-				margin: 0;
-				padding: 0;
-			}
-			h1 {
-				font-size: 1.5em;
-				margin: 0 0 10px;
-			}
-			ul {
-				list-style: none;
-				margin: 0;
-				padding: 0;
-			}
-			li {
-				margin: 5px 0;
-			}
-			button {
-				background-color: #4CAF50;
-				border: none;
-				color: white;
-				padding: 10px 20px;
-				text-align: center;
-				text-decoration: none;
-				display: inline-block;
-				font-size: 16px;
-				margin: 10px 0;
-				cursor: pointer;
-			}
-			button:hover {
-				background-color: #3e8e41;
-			}
-		</style>
-	</head>
-	<body>
-		<h1>Confirm vulnerabilities to deploy</h1>
-		<p>You have selected the following vulnerabilities:</p>
-		<ul>
-			{{range $v := .}}
-			<li>{{$v}}</li>
-			{{end}}
-		</ul>
-		<form method="POST" action="/deploy">
-			<button type="submit">Deploy vulnerabilities</button>
-		</form>
-	</body>
-</html>`)
+  <head>
+    <meta charset="utf-8">
+    <title>Vuls Deployer</title>
+  </head>
+  <body>
+    <h1>Vuls Deployer</h1>
+    <form method="POST" action="/generate-playbook">
+      <label for="vulnerabilities">Select vulnerabilities to deploy:</label><br>
+      {{ range . }}
+      <input type="checkbox" name="vulnerabilities" value="{{ .ID }}"> {{ .Name }}<br>
+      {{ end }}
+      <br>
+      <input type="submit" value="Generate Ansible playbook">
+    </form>
+  </body>
+</html>
