@@ -6,12 +6,11 @@ import (
 	"log"
 	"os"
 
+	"github.com/nippati/moff/pkg/playbook"
 	"github.com/nippati/moff/pkg/scan"
 	"github.com/nippati/moff/pkg/ui"
-	"github.comi/nippati/moff/pkg/playbook"
 )
 
-// hoge
 func main() {
 	// Read the JSON file of vuls scan results
 	file, err := os.Open("vuls-results.json")
