@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/nippati/moff"
+	"github.com/nippati/moff/pkg/moff"
 )
 
 // moff
