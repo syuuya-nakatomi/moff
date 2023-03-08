@@ -8,6 +8,7 @@ import (
 	"github.com/nippati/moff/pkg/moff"
 )
 
+// hoge
 func main() {
 	http.HandleFunc("/", handle)
 	log.Fatal(http.ListenAndServe(":8080", nil))
