@@ -1,37 +1,24 @@
 {
-    "Hosts": [
-      {
-        "Hostname": "example.com",
-        "IP": "192.168.0.1",
-        "Vulnerabilities": [
-          {
-            "VulnerabilityID": "CVE-2021-1234",
-            "Title": "Example Vulnerability",
-            "Severity": "High"
-          },
-          {
-            "VulnerabilityID": "CVE-2021-5678",
-            "Title": "Another Vulnerability",
-            "Severity": "Critical"
-          }
-        ]
+  "scan_id": "example-scan-id",
+  "scan_date": "2022-03-07T16:27:03Z",
+  "hostname": "example-hostname",
+  "os": "Ubuntu 20.04",
+  "kernel": "5.11.0-46-generic",
+  "packages": {
+    "apt": {
+      "openssh-client": {
+        "version": "1:8.2p1-4ubuntu0.3",
+        "status": "not vulnerable",
+        "cve": ""
       },
-      {
-        "Hostname": "example.net",
-        "IP": "192.168.0.2",
-        "Vulnerabilities": [
-          {
-            "VulnerabilityID": "CVE-2021-4321",
-            "Title": "Third Vulnerability",
-            "Severity": "Medium"
-          },
-          {
-            "VulnerabilityID": "CVE-2021-8765",
-            "Title": "Fourth Vulnerability",
-            "Severity": "High"
-          }
-        ]
+      "openssl": {
+        "version": "1.1.1f-1ubuntu2.15",
+        "status": "vulnerable",
+        "cve": "CVE-2021-3450"
       }
-    ]
-  }
-  
+    }
+  },
+  "vulnerabilities": [
+    "CVE-2021-3450"
+  ]
+}
