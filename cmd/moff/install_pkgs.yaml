@@ -3,28 +3,3 @@
 - hosts: all
   tasks:
   
-  - name: Install openssl package
-    apt:
-      name: "openssl"
-      state: present
-    
-  - name: Install nginx package
-    apt:
-      name: "nginx"
-      state: present
-    
-  - name: Install php package
-    apt:
-      name: "php"
-      state: present
-    
-  - name: Install vim package
-    apt:
-      name: "vim"
-      state: present
-    
-  - name: Install git package
-    apt:
-      name: "git"
-      state: present
-    
