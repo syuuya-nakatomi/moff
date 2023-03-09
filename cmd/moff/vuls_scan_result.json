@@ -1,0 +1,17 @@
+{
+    "packages": [
+      {
+        "name": "apache2",
+        "version": "2.4.41-4ubuntu3.5"
+      },
+      {
+        "name": "mysql-server",
+        "version": "8.0.28-0ubuntu0.20.04.4"
+      },
+      {
+        "name": "php",
+        "version": "2:7.4+75ubuntu2.4"
+      }
+    ]
+  }
+  
